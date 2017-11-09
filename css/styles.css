@@ -1,4 +1,18 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
+#calendar header > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#calendar header > div:first-child button {
+  width: 2rem;
+}
 
 #calendar #calendar-weekdays-labels,
 #calendar .week {
@@ -8,9 +22,20 @@
 #calendar #calendar-weekdays-labels > div,
 #calendar .week > div{
   width: calc(100% / 7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 4rem;
+  border: .025rem solid black;
+  margin: .25rem;
 }
 
-#calendar .week .previousMonthDay {
+#calendar #calendar-weekdays-labels > div {
+  background: lightgrey;
+}
+
+#calendar .week .previousMonthDay,
+#calendar .week .nextMonthDay {
   color: lightgrey;
 }
 

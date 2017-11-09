@@ -3,12 +3,12 @@ function Calendar(day, month, year, wrap) {
   this.year = year || dateNow.getFullYear();
   this.month = month || dateNow.getMonth();
   this.day = day || dateNow.getDate();
+  this.launches = {};
   this.renderInit();
   this.updateMonth(this.month, this.year);
 };
 
 Calendar.prototype.renderInit = function() {
-  const self = this;
   const el = document.getElementById('calendar');
 
   if (!this.hasDom) {
@@ -66,35 +66,23 @@ Calendar.prototype.getMainTemplate =  function() {
 }
 
 
-Calendar.prototype.fetchMonthEvents = (month, year) => {
+Calendar.prototype.fetchMonthEvents = function(month, year) {
   const startMonth = (month < 10) ? '0' + month : '' + month;
   const endMonth = (month === 12) ? '01' : ((month + 1) < 10) ? '0' + (month + 1) : '' + (month + 1);
   const startYear = year;
   const endYear = (month === 12) ? year + 1 : year;
   const el = document.getElementById('calendar');
+  const monthEvents = {};
+  const self = this;
 
   fetch(`https://launchlibrary.net/1.2/launch/${startYear}-${startMonth}-01/${endYear}-${endMonth}-01`)
-    .then(function(data) {
-      return data.json();
-    })
+    .then(data => data.json())
     .then((data) => {
       data.launches.forEach((launch) => {
         let launchDay = new Date(launch.windowstart).getDate();
         let launchMonth = new Date(launch.windowstart).getMonth() + 1;
-        console.log(launchDay + '/' + launchMonth);
-        el.addEventListener('mouseover', (e) => {
-          const eventSource = e.target;
-          if (eventSource.dataset.day === launchDay && eventSource.dataset.month === launchMonth) {
-            console.log('in' + e.target.dataset.day);
-            console.log(launch);
-          }
-        });
-        el.addEventListener('mouseout', (e) => {
-          const eventSource = e.target;
-          if (eventSource.dataset.day === launchDay && eventSource.dataset.month === launchMonth) {
-            console.log('out' + e.target.dataset.day);
-          }
-        });
+        let launchYear = new Date(launch.windowstart).getFullYear();
+        this.launches[launchDay + '/' + launchMonth + '/' + launchYear] = launch;
       });
     })
     .catch((error) => {
@@ -103,12 +91,14 @@ Calendar.prototype.fetchMonthEvents = (month, year) => {
 }
 
 Calendar.prototype.updateMonth = function(month, year) {
+  const el = document.getElementById('calendar');
   const currentMonth = month + 1;
   const months = ['January', 'February', 'March', 'April', 'May', 'June', 'Jully', 'August', 'September', 'October', 'November', 'December'];
   const febDays = ((year%100!=0) && (year%4==0) || (year%400==0)) ? 28 : 29;
   const daysInMonth = [31, febDays, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   const currentMonthDays = daysInMonth[month];
   const currentMonthFirstWeekday = new Date(`${currentMonth} 1 ${year}`).getDay();
+  const nextMonthFirstWeekday = new Date(`${currentMonth + 1} 1 ${year}`).getDay();
   let previousMonthDays = daysInMonth[month - 1];
   const titleHtml = `${months[month]} - ${year}`;
   let count = 0;
@@ -131,14 +121,20 @@ Calendar.prototype.updateMonth = function(month, year) {
 
   for (let i = 0; i < currentMonthDays; i++) {
     count++;
-    day = i+1;
-    calendarDaysHtml += `<div class="currentMonthDay" data-day="${day}" data-month="${currentMonth}">${day}</div>`;
+    day = i + 1;
+    calendarDaysHtml += `<div class="currentMonthDay" data-day="${day}" data-month="${currentMonth}" data-year="${year}">${day}</div>`;
     if (count % 7 === 0){
       calendarDaysHtml += `
         </div>
         <div class="week">
       `;
     }
+  }
+
+  for (let i = 0; i < 7 - nextMonthFirstWeekday; i++) {
+    count++;
+    day = i + 1;
+    calendarDaysHtml += `<div class="nextMonthDay" data-day="${day}" data-month="${currentMonth + 1}" data-year="${year}">${day}</div>`;
   }
 
   calendarDaysHtml += `</div>`;
@@ -150,8 +146,24 @@ Calendar.prototype.updateMonth = function(month, year) {
   calBody.innerHTML = calendarDaysHtml;
   this.fetchMonthEvents(currentMonth, year);
 
-  console.log(this.monthEvents);
-}
+  el.addEventListener('mouseover', (e) => {
+    const eventSourceData = e.target.dataset;
+    const dataKey = `${eventSourceData.day}/${eventSourceData.month}/${eventSourceData.year}`;
 
+    if (this.launches[dataKey]) {
+      console.log(this.launches[dataKey]);
+      alert(this.launches[dataKey].name);
+    }
+
+  });
+  el.addEventListener('mouseout', (e) => {
+    const eventSourceData = e.target.dataset;
+    const dataKey = `${eventSourceData.day}/${eventSourceData.month}/${eventSourceData.year}`;
+    if (this.launches[dataKey]) {
+
+    }
+  });
+  console.log(this.launches);
+}
 
 var calendar = new Calendar();
