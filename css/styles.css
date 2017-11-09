@@ -1,0 +1,19 @@
+
+
+#calendar #calendar-weekdays-labels,
+#calendar .week {
+  display: flex;
+}
+
+#calendar #calendar-weekdays-labels > div,
+#calendar .week > div{
+  width: calc(100% / 7);
+}
+
+#calendar .week .previousMonthDay {
+  color: lightgrey;
+}
+
+#calendar .week .currentMonthDay {
+  color: black;
+}
