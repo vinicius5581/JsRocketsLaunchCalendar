@@ -82,6 +82,9 @@ Calendar.prototype.fetchMonthEvents = function(month, year) {
         let launchDay = new Date(launch.windowstart).getDate();
         let launchMonth = new Date(launch.windowstart).getMonth() + 1;
         let launchYear = new Date(launch.windowstart).getFullYear();
+        var launchEl = el.querySelector("[data-day='" + launchDay + "'][data-month='" + launchMonth + "'][data-year='" + launchYear + "']");
+        launchEl.style.color = 'red';
+        console.log(launchEl);
         this.launches[launchDay + '/' + launchMonth + '/' + launchYear] = launch;
       });
     })
@@ -89,6 +92,15 @@ Calendar.prototype.fetchMonthEvents = function(month, year) {
       console.log(error);
     })
 }
+
+
+// var tbl = document.getElementById('eTable');  //cache the table selector
+//
+// while (len--) {
+//  tbl.querySelector("tr[data-empid=" + idArray[len] + "]").style.display='none';
+// }
+
+
 
 Calendar.prototype.updateMonth = function(month, year) {
   const el = document.getElementById('calendar');
@@ -121,8 +133,14 @@ Calendar.prototype.updateMonth = function(month, year) {
 
   for (let i = 0; i < currentMonthDays; i++) {
     count++;
-    day = i + 1;
-    calendarDaysHtml += `<div class="currentMonthDay" data-day="${day}" data-month="${currentMonth}" data-year="${year}">${day}</div>`;
+    day = (i !== 0 ) ? i + 1 : months[currentMonth].substring(0,3) + ' ' + i + 1;
+
+    calendarDaysHtml += `
+      <div class="currentMonthDay" data-day="${day}" data-month="${currentMonth}" data-year="${year}">
+        <header>${day}</header>
+        <main></main>
+      </div>`;
+
     if (count % 7 === 0){
       calendarDaysHtml += `
         </div>

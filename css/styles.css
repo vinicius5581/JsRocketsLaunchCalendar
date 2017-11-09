@@ -19,19 +19,29 @@
   display: flex;
 }
 
-#calendar #calendar-weekdays-labels > div,
-#calendar .week > div{
-  width: calc(100% / 7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 4rem;
-  border: .025rem solid black;
-  margin: .25rem;
+#calendar #calendar-weekdays-labels {
+  border-top: .025rem solid lightgrey;
 }
 
 #calendar #calendar-weekdays-labels > div {
-  background: lightgrey;
+  width: calc(100% / 7);
+  display: flex;
+  justify-content: left;
+  align-items: top;
+  padding: .5rem;
+}
+
+
+#calendar .week > div {
+  width: calc(100% / 7);
+  border: .0025rem solid lightgrey;
+  padding: .5rem;
+}
+
+#calendar .week > div header {}
+
+#calendar .week > div main {
+  height: 4rem;
 }
 
 #calendar .week .previousMonthDay,
