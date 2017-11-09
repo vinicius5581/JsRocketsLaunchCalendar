@@ -4,7 +4,6 @@ function Calendar(day, month, year, wrap) {
   this.month = month || dateNow.getMonth();
   this.day = day || dateNow.getDate();
   this.renderInit();
-  // this.updateMonth(this.month, this.year);
   this.updateMonth(this.month, this.year);
 };
 
@@ -86,26 +85,22 @@ Calendar.prototype.updateMonth = function(month, year) {
   const currentMonthDays = daysInMonth[month];
   const currentMonthFirstWeekday = new Date(`${currentMonth} 1 ${year}`).getDay();
   let previousMonthDays = daysInMonth[month - 1];
-
   const titleHtml = `${months[month]} - ${year}`;
+  let count = 0;
   let calendarDaysHtml = '';
+  let diff;
 
   if (currentMonth === 1) {
     previousMonthDays = daysInMonth[11];
   }
 
-  let weekDaysQty = 7;
-  let count = 0;
-
   calendarDaysHtml = `<div class="week">`;
-
 
   for (let i = 0; i < currentMonthFirstWeekday; i++) {
     count++;
-    var diff = currentMonthFirstWeekday - i - 1;
+    diff = currentMonthFirstWeekday - i - 1;
     calendarDaysHtml += `<div class="previousMonthDay">${previousMonthDays - diff}</div>`;
   }
-
 
   for (let i = 0; i < currentMonthDays; i++) {
     count++;
@@ -123,7 +118,6 @@ Calendar.prototype.updateMonth = function(month, year) {
   var calTitle = document.getElementById('calendar-label');
   var calBody = document.getElementById('calendar-body');
 
-
   calTitle.innerHTML = titleHtml;
   calBody.innerHTML = calendarDaysHtml;
   this.fetchMonthEvents();
@@ -133,12 +127,3 @@ Calendar.prototype.updateMonth = function(month, year) {
 
 
 var calendar = new Calendar();
-
-
-// console.log(calendar.year);
-// console.log(calendar.month);
-// console.log(calendar.day);
-// console.log(calendar.renderMonth());
-// console.log(calendar.year);
-// console.log(calendar.renderMonth());
-// console.log(calendar.year);
