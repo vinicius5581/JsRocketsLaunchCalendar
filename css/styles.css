@@ -82,3 +82,17 @@
   border: 1px solid #45d392;
   background-color: #76ac95;
 }
+
+footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+footer a {
+  text-decoration: none;
+  color: blue;
+}
